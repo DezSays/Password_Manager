@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const PORT = 3333
+const cors = require('cors')
+app.use(cors())
 
 app.get("/heartbeat", (req, res) => {
   res.send("Heartbeat");
