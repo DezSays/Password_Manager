@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 3333
 const cors = require('cors')
-app.use(cors())
+let corsOptions = {
+  origin: 'https://passwordmanager-production-a98e.up.railway.app/',
+}
 
-app.get("/heartbeat", (req, res) => {
+app.get("/heartbeat", cors(corsOptions),(req, res) => {
   res.send("Heartbeat");
 });
 
