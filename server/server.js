@@ -15,6 +15,11 @@ app.get('/users', async (req, res) => {
     res.json(userData)
 })
 
+app.get('/passwords', async (req, res) => {
+    const passwordData = await db.manyOrNone('SELECT * FROM passwords')
+    res.json(passwordData)
+})
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
