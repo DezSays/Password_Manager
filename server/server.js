@@ -3,33 +3,33 @@ const express = require("express");
 const pgp = require("pg-promise")();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); 
-
+const cors = require('cors');
 const app = express();
 const PORT = 3003;
 const db = pgp(process.env.DB);
 const jwtSecret = process.env.JWT_SECRET;
 
 app.use(express.json());
-
+app.use(cors());
 // Middleware to check and decode JWT token
-// const checkAuth = (req, res, next) => {
-//   const token = req.header("Authorization");
-//   if (!token) {
-//     return res.status(401).json({ error: "Access denied, no token provided" });
-//   }
+const checkAuth = (req, res, next) => {
+  const token = req.header("Authorization");
+  if (!token) {
+    return res.status(401).json({ error: "Access denied, no token provided" });
+  }
 
-//   try {
-//     const decoded = jwt.verify(token, jwtSecret);
-//     req.user = decoded;
-//     next();
-//   } catch (error) {
-//     res.status(401).json({ error: "Invalid token" });
-//   }
-// };
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
 
 // Apply the checkAuth middleware to protected routes
-// app.use("/users/:id/passwords", checkAuth);
-// app.use("/passwords", checkAuth);
+app.use("/users/:id/passwords", checkAuth);
+app.use("/passwords", checkAuth);
 
 app.get("/heartbeat", (req, res) => {
   res.send("Heartbeat Steady");
@@ -37,21 +37,22 @@ app.get("/heartbeat", (req, res) => {
 
 app.get("/users/:id", async (req, res) => {
   const { id } = req.params;
-  if (!Number.isInteger(Number(id))) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
   try {
-    const userData = await db.manyOrNone(
-      "SELECT * FROM users WHERE id = $1",
+    const userData = await db.oneOrNone(
+      "SELECT id, username, email FROM users WHERE id = $1",
       id
     );
-    if (userData.length === 0) {
+    
+    if (!userData) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(userData);
+  
+    return res.json(userData);
   } catch (error) {
-    res.status(500).json({ message: `An error occurred: ${error.message}` });
+    console.error("Error fetching user:", error);
+    return res.status(500).json({ message: "An error occurred while fetching user data" });
   }
+  
 });
 
 app.get("/users/:id/passwords", async (req, res) => {
@@ -117,21 +118,21 @@ app.post("/signin", async (req, res) => {
   }
 });
 
-// app.post("/passwords", async (req, res) => {
-//   const { notes, site_url, pw, username } = req.body;
-//   const user_id = req.user.user_id;
+app.post("/passwords", async (req, res) => {
+  const { notes, site_url, pw, username } = req.body;
+  const user_id = req.user.user_id;
 
-//   try {
-//     await db.none(
-//       "INSERT INTO passwords(user_id, notes, site_url, pw, username) VALUES($1, $2, $3, $4, $5)",
-//       [user_id, notes, site_url, pw, username]
-//     );
-//     res.json({ message: "Password added successfully" });
-//   } catch (error) {
-//     console.error("Error adding password:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
+  try {
+    await db.none(
+      "INSERT INTO passwords(user_id, notes, site_url, pw, username) VALUES($1, $2, $3, $4, $5)",
+      [user_id, notes, site_url, pw, username]
+    );
+    res.json({ message: "Password added successfully" });
+  } catch (error) {
+    console.error("Error adding password:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // add passwords post route
 // update passwords put route
