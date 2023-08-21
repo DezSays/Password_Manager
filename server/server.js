@@ -1,35 +1,46 @@
 require("dotenv").config();
 const express = require("express");
 const pgp = require("pg-promise")();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken"); 
+const bcrypt = require("bcrypt"); 
 const cors = require('cors');
 const app = express();
 const PORT = 3003;
 const db = pgp(process.env.DB);
-const jwtSecret = process.env.JWT_SECRET;
+const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser')
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  // console.log('secret:', process.env.ACCESS_TOKEN_SECRET);
+  // console.log('token:', token);
+
+  if (token === null) {
+
+    return res.sendStatus(401);
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, userIDAuth) => {
+    if (err) {
+      console.log('Verification error:', err);
+      return res.sendStatus(401);
+    }
+    req.userIDAuth = userIDAuth;
+    
+    next();
+  });
+}
+
+
 
 app.use(express.json());
-app.use(cors());
-// Middleware to check and decode JWT token
-const checkAuth = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token) {
-    return res.status(401).json({ error: "Access denied, no token provided" });
-  }
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
+/
+app.use(bodyParser.urlencoded({ extended: false }))
 
-  try {
-    const decoded = jwt.verify(token, jwtSecret);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
-  }
-};
-
-// Apply the checkAuth middleware to protected routes
-app.use("/users/:id/passwords", checkAuth);
-app.use("/passwords", checkAuth);
+app.use(bodyParser.json())
 
 app.get("/heartbeat", (req, res) => {
   res.send("Heartbeat Steady");
@@ -57,9 +68,6 @@ app.get("/users/:id", async (req, res) => {
 
 app.get("/users/:id/passwords", async (req, res) => {
   const { id } = req.params;
-  if (!Number.isInteger(Number(id))) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
   try {
     const passwordData = await db.manyOrNone("SELECT * FROM passwords WHERE user_id = $1", id);
     if(passwordData.length > 0){
@@ -97,8 +105,9 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/signin", async (req, res) => {
+app.post("/signin", authenticateToken, async (req, res) => {
   const { username, pw } = req.body;
+  console.log(req.userIDAuth)
   try {
     const user = await db.oneOrNone(
       "SELECT * FROM users WHERE username = $1",
@@ -111,7 +120,11 @@ app.post("/signin", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
-    res.json({ message: "Sign-in successful" });
+    const user_id_auth = user.id
+    const userIDAuth = {id: user_id_auth}
+    const test = jwt.sign(userIDAuth, process.env.ACCESS_TOKEN_SECRET);
+    res.json({ token: test, message: `Sign-in successful` });
+    
   } catch (error) {
     console.error("Error signing in:", error);
     res.status(500).json({ error: "Internal server error" });
