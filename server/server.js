@@ -52,7 +52,7 @@ app.get("/heartbeat", (req, res) => {
   res.send("Heartbeat Steady");
 });
 
-app.post("/api/login", async (req, res) => {
+app.post("/api/login",  async (req, res) => {
   const { username, pw } = req.body;
   try {
     const user = await db.oneOrNone(
@@ -74,6 +74,7 @@ app.post("/api/login", async (req, res) => {
     res.json({
       token: token,
       message: "Sign in successful boi",
+      userID: user_id_auth
     });
   } catch (error) {
     console.error("Error signing in:", error);
@@ -102,20 +103,20 @@ app.post("/api/login", async (req, res) => {
 
 // });
 
-// app.get("/users/:id/passwords", async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const passwordData = await db.manyOrNone("SELECT * FROM passwords WHERE user_id = $1", id);
-//     if(passwordData.length > 0){
-//       res.json(passwordData);
-//     }
-//     else{
-//       res.json({message: "No passwords found for this user."})
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: `An error occurred: ${error.message}` });
-//   }
-// });
+app.get("/users/:id/passwords", ensureToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const passwordData = await db.manyOrNone("SELECT * FROM passwords WHERE user_id = $1", id);
+    if(passwordData.length > 0){
+      res.json(passwordData);
+    }
+    else{
+      res.json({message: "No passwords found for this user."})
+    }
+  } catch (error) {
+    res.status(500).json({ message: `An error occurred: ${error.message}` });
+  }
+});
 
 app.post("/signup", async (req, res) => {
   const { id, email, pw, first_name, last_name, username, avatar_url } =

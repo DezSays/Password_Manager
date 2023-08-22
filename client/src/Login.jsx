@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useToken } from './Token'
 
 function Login() {
+  const { setToken, setUserID } = useToken();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [pw, setPw] = useState("");
@@ -21,7 +22,10 @@ function Login() {
       });
       console.log('res',response)
       if (response.ok) {
-        // Successful login, redirect to dashboard
+        const data = await response.json()
+        console.log(data.token)
+        setUserID(data.userID)
+        setToken(data.token);
         navigate("/dashboard");
       } else {
         const data = await response.json();
