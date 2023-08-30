@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Register from './Register';
 import Login from './Login';
 import Dashboard from './Dashboard'; 
+import AddPasswordForm from './AddPasswordForm'
 import { TokenProvider } from './Token';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/addpass" element={<AddPasswordForm />} />
         <Route path="*" element={<Login />} />
       </Routes>
     </Router>

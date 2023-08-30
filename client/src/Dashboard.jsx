@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToken } from './Token';
+import bcrypt from 'bcryptjs'; 
 
 const Dashboard = () => {
   const { token, userID } = useToken();
-  const [pw, setPasswords] = useState([]);
+  const [passwords, setPasswords] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fix endpoint below 
     fetch(`http://localhost:3000/users/${userID}/passwords`, {
       method: 'GET',
       headers: {
@@ -20,35 +20,44 @@ const Dashboard = () => {
         if (response.ok) {
           return response.json();
         } else if (response.status === 401) {
-          navigate('/login'); 
+          navigate('/login');
         }
       })
       .then(data => {
         if (data) {
-          setPasswords(data);
+          // Decrypt passwords using bcrypt
+          const decryptedPasswords = data.map(entry => ({
+            ...entry,
+            pw: bcrypt.hashSync(entry.pw, 10) // Decrypt the password
+          }));
+          setPasswords(decryptedPasswords);
         }
       })
       .catch(error => console.error('Error fetching passwords:', error));
   }, [token]);
-  
+
+  const handleClick = () => {
+    navigate('/addpass')
+  }
 
   return (
     <div>
       <h1>Passwords Dashboard</h1>
       <ul>
-        {pw.length > 0 ? (
-          pw.map(password => (
+        {passwords.length > 0 ? (
+          passwords.map(password => (
             <li key={password.password_id}>
               <strong>Site URL:</strong> {password.site_url}<br />
               <strong>Username:</strong> {password.username}<br />
               <strong>Notes:</strong> {password.notes}<br />
-              <strong>pw:</strong> {password.pw}<br />
+              <strong>Password:</strong> {password.pw}<br />
             </li>
           ))
         ) : (
           <p>No passwords found for this user.</p>
         )}
       </ul>
+      <button onClick={handleClick}>take me to add passwords</button>
     </div>
   );
 };

@@ -20,10 +20,8 @@ function Login() {
         },
         body: JSON.stringify({ username, pw: pw }),
       });
-      console.log('res',response)
       if (response.ok) {
         const data = await response.json()
-        console.log(data.token)
         setUserID(data.userID)
         setToken(data.token);
         navigate("/dashboard");
