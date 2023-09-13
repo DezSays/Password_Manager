@@ -118,6 +118,22 @@ app.get("/users/:id/passwords", ensureToken, async (req, res) => {
   }
 });
 
+app.post("/users/:id/passwords", ensureToken, async (req, res) => {
+  const { notes, site_url, pw, username } = req.body;
+  const user_id = req.params.id
+
+  try {
+    await db.none(
+      "INSERT INTO passwords(user_id, notes, site_url, pw, username) VALUES($1, $2, $3, $4, $5)",
+      [user_id, notes, site_url, pw, username]
+    );
+    res.json({ message: "Password added successfully" });
+  } catch (error) {
+    console.error("Error adding password:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/signup", async (req, res) => {
   const { id, email, pw, first_name, last_name, username, avatar_url } =
     req.body;
@@ -129,10 +145,10 @@ app.post("/signup", async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ error: "Username already exists" });
     }
-    const hashedPassword = await bcrypt.hash(pw, 10);
+    const hashed = await bcrypt.hash(pw, 10);
     await db.none(
       "INSERT INTO users(id, email, pw, first_name, last_name, username, avatar_url) VALUES($1, $2, $3, $4, $5, $6, $7)",
-      [id, email, hashedPassword, first_name, last_name, username, avatar_url]
+      [id, email, hashed, first_name, last_name, username, avatar_url]
     );
     res.json({ message: "User created successfully" });
   } catch (error) {
@@ -143,27 +159,11 @@ app.post("/signup", async (req, res) => {
 
 
 
-// app.post("/passwords", async (req, res) => {
-//   const { notes, site_url, pw, username } = req.body;
-//   const user_id = req.user.user_id;
 
-//   try {
-//     await db.none(
-//       "INSERT INTO passwords(user_id, notes, site_url, pw, username) VALUES($1, $2, $3, $4, $5)",
-//       [user_id, notes, site_url, pw, username]
-//     );
-//     res.json({ message: "Password added successfully" });
-//   } catch (error) {
-//     console.error("Error adding password:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// // add passwords post route
 // // update passwords put route
 // // delete passwords delete route
 // // delete user? not required but would be nice
-// // use jwt for auth
+
 
 app.listen(PORT, function () {
   console.log(`app listening bruh. Port ${PORT} boi.`);
