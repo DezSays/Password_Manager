@@ -134,6 +134,8 @@ app.post("/users/:id/passwords", ensureToken, async (req, res) => {
   }
 });
 
+
+
 app.post("/signup", async (req, res) => {
   const { id, email, pw, first_name, last_name, username, avatar_url } =
     req.body;

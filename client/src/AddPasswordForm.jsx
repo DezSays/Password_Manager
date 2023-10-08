@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useToken } from './Token';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 
 const AddPasswordForm = () => { 
+  const navigate = useNavigate()
   const { token, userID } = useToken(); 
   const [notes, setNotes] = useState('');
   const [siteUrl, setSiteUrl] = useState('');
@@ -40,6 +42,10 @@ const AddPasswordForm = () => {
       console.error('Error adding password:', error);
     }
   };
+
+  const handleReturn = () => {
+    navigate('/dashboard')
+  }
   return (
     <div>
       <h2>Add Password</h2>
@@ -64,6 +70,7 @@ const AddPasswordForm = () => {
       </label>
       <br />
       <button onClick={handleAddPassword}>Add Password</button>
+      <button onClick={handleReturn}>take me home tonight</button>
     </div>
   );
 };
