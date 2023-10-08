@@ -134,6 +134,58 @@ app.post("/users/:id/passwords", ensureToken, async (req, res) => {
   }
 });
 
+app.put("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
+  const { notes, site_url, pw, username } = req.body;
+  const user_id = req.params.id;
+  const passwordId = req.params.passwordId; 
+
+  try {
+    const existingPassword = await db.oneOrNone(
+      "SELECT * FROM passwords WHERE user_id = $1 AND id = $2",
+      [user_id, passwordId]
+    );
+
+    if (existingPassword) {
+      await db.none(
+        "UPDATE passwords SET notes = $1, site_url = $2, pw = $3, username = $4 WHERE user_id = $5 AND id = $6",
+        [notes, site_url, pw, username, user_id, passwordId]
+      );
+      res.sendStatus(200); 
+    } else {
+      console.log('Password not found.');
+      res.sendStatus(404); 
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.sendStatus(500); 
+  }
+});
+
+app.delete("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
+  const user_id = req.params.id;
+  const passwordId = req.params.passwordId;
+
+  try {
+    const existingPassword = await db.oneOrNone(
+      "SELECT * FROM passwords WHERE user_id = $1 AND id = $2",
+      [user_id, passwordId]
+    );
+
+    if (existingPassword) {
+      await db.none(
+        "DELETE FROM passwords WHERE user_id = $1 AND id = $2",
+        [user_id, passwordId]
+      );
+      res.sendStatus(204); // 204 indicates no content after successful deletion
+    } else {
+      console.log('Password not found.');
+      res.sendStatus(404); // Sending a not found status code
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.sendStatus(500); // Sending an internal server error status code
+  }
+});
 
 
 app.post("/signup", async (req, res) => {
