@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToken } from './Token';
-import { Button, Container, Card, Row, Col } from 'react-bootstrap';
+import { Button, Container, Card, Row, Col, Form } from 'react-bootstrap';
 
 const Dashboard = () => {
   const { token, userID } = useToken();
   const [passwords, setPasswords] = useState([]);
+  const [editingPasswordId, setEditingPasswordId] = useState(null);
+  const [editedValues, setEditedValues] = useState({});
   const navigate = useNavigate();
 
   const fetchPasswords = () => {
@@ -46,7 +48,6 @@ const Dashboard = () => {
   }
 
   const handleDelete = (passwordId) => {
-    // Send a DELETE request to your server
     fetch(`http://localhost:3000/users/${userID}/passwords/${passwordId}`, {
       method: 'DELETE',
       headers: {
@@ -56,11 +57,46 @@ const Dashboard = () => {
     })
       .then(response => {
         if (response.ok) {
-          // Reload passwords after successful deletion
-          fetchPasswords();
+          fetchPasswords(); // Reload passwords after successful deletion
         }
       })
       .catch(error => console.error('Error deleting password:', error));
+  }
+
+  const handleEdit = (passwordId) => {
+    setEditingPasswordId(passwordId);
+    // Set the initial edited values to the current password values
+    const passwordToEdit = passwords.find(password => password.id === passwordId);
+    setEditedValues({ ...passwordToEdit });
+  }
+
+  const handleUpdate = (index, updatedPassword) => {
+    // Send an update request to your server
+    fetch(`http://localhost:3000/users/${userID}/passwords/${updatedPassword.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updatedPassword)
+    })
+      .then(response => {
+        if (response.ok) {
+          const updatedPasswords = [...passwords];
+          updatedPasswords[index] = updatedPassword;
+          setPasswords(updatedPasswords);
+          setEditingPasswordId(null); // Exit edit mode
+        }
+      })
+      .catch(error => console.error('Error updating password:', error));
+  }
+
+  const handleInputChange = (field, value) => {
+    // Update the edited values in the state when input fields change
+    setEditedValues(prevValues => ({
+      ...prevValues,
+      [field]: value
+    }));
   }
 
   return (
@@ -72,29 +108,69 @@ const Dashboard = () => {
             <Card.Body>
               <Row>
                 <Col>
-                  <strong>Site URL: </strong> {password.site_url}
+                  <strong>Site URL:</strong>
+                  {editingPasswordId === password.id ? (
+                    <Form.Control
+                      type="text"
+                      value={editedValues.site_url || ''}
+                      onChange={(e) => handleInputChange('site_url', e.target.value)}
+                    />
+                  ) : (
+                    <span> {password.site_url} </span>
+                  )}
                 </Col>
                 <Col>
-                  <strong>Username:</strong> {password.username}
+                  <strong>Username:</strong>
+                  {editingPasswordId === password.id ? (
+                    <Form.Control
+                      type="text"
+                      value={editedValues.username || ''}
+                      onChange={(e) => handleInputChange('username', e.target.value)}
+                    />
+                  ) : (
+                    <span> {password.username} </span>
+                  )}
                 </Col>
                 <Col>
-                  <strong>Notes:</strong> {password.notes}
+                  <strong>Notes:</strong>
+                  {editingPasswordId === password.id ? (
+                    <Form.Control
+                      as="textarea"
+                      value={editedValues.notes || ''}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                    />
+                  ) : (
+                    <span> {password.notes} </span>
+                  )}
                 </Col>
                 <Col>
                   <strong>Password:</strong>
-                  {password.revealed ? (
-                    <div>
-                      {password.pw}
-                      <Button variant="secondary" className="ml-2" onClick={() => toggleReveal(index)}>Hide</Button>
-                    </div>
+                  {editingPasswordId === password.id ? (
+                    <Form.Control
+                      type="password"
+                      value={editedValues.pw || ''}
+                      onChange={(e) => handleInputChange('pw', e.target.value)}
+                    />
                   ) : (
-                    <div>
-                      <Button variant="primary" className="ml-2" onClick={() => toggleReveal(index)}>Reveal</Button>
-                    </div>
+                    password.revealed ? (
+                      <div>
+                        {password.pw}
+                        <Button variant="secondary" className="ml-2" onClick={() => toggleReveal(index)}>Hide</Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <Button variant="primary" className="ml-2" onClick={() => toggleReveal(index)}>Reveal</Button>
+                      </div>
+                    )
                   )}
                 </Col>
               </Row>
-              <Button variant="danger" onClick={() => handleDelete(password.id)}>Delete</Button> {/* Add Delete button */}
+              {editingPasswordId === password.id ? (
+                <Button variant="success" className="mt-2" onClick={() => handleUpdate(index, editedValues)}>Save</Button>
+              ) : (
+                <Button variant="info" className="mt-2" onClick={() => handleEdit(password.id)}>Edit</Button>
+              )}
+              <Button variant="danger" className="ml-2 mt-2" onClick={() => handleDelete(password.id)}>Delete</Button>
             </Card.Body>
           </Card>
         ))
