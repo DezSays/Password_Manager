@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToken } from './Token';
 import { Button, Container, Card, Row, Col, Form } from 'react-bootstrap';
+import Navbar from './Navbar'
 
 const Dashboard = () => {
   const { token, userID } = useToken();
@@ -57,7 +58,7 @@ const Dashboard = () => {
     })
       .then(response => {
         if (response.ok) {
-          fetchPasswords(); // Reload passwords after successful deletion
+          fetchPasswords(); 
         }
       })
       .catch(error => console.error('Error deleting password:', error));
@@ -65,13 +66,11 @@ const Dashboard = () => {
 
   const handleEdit = (passwordId) => {
     setEditingPasswordId(passwordId);
-    // Set the initial edited values to the current password values
     const passwordToEdit = passwords.find(password => password.id === passwordId);
     setEditedValues({ ...passwordToEdit });
   }
 
   const handleUpdate = (index, updatedPassword) => {
-    // Send an update request to your server
     fetch(`http://localhost:3000/users/${userID}/passwords/${updatedPassword.id}`, {
       method: 'PUT',
       headers: {
@@ -85,14 +84,13 @@ const Dashboard = () => {
           const updatedPasswords = [...passwords];
           updatedPasswords[index] = updatedPassword;
           setPasswords(updatedPasswords);
-          setEditingPasswordId(null); // Exit edit mode
+          setEditingPasswordId(null); 
         }
       })
       .catch(error => console.error('Error updating password:', error));
   }
 
   const handleInputChange = (field, value) => {
-    // Update the edited values in the state when input fields change
     setEditedValues(prevValues => ({
       ...prevValues,
       [field]: value
@@ -100,6 +98,8 @@ const Dashboard = () => {
   }
 
   return (
+    <>
+    <Navbar />
     <Container className="mt-4">
       <h1 className="mb-4">Passwords Dashboard</h1>
       {passwords.length > 0 ? (
@@ -114,46 +114,46 @@ const Dashboard = () => {
                       type="text"
                       value={editedValues.site_url || ''}
                       onChange={(e) => handleInputChange('site_url', e.target.value)}
-                    />
-                  ) : (
-                    <span> {password.site_url} </span>
+                      />
+                      ) : (
+                        <span> {password.site_url} </span>
                   )}
                 </Col>
                 <Col>
                   <strong>Username:</strong>
                   {editingPasswordId === password.id ? (
                     <Form.Control
-                      type="text"
-                      value={editedValues.username || ''}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
+                    type="text"
+                    value={editedValues.username || ''}
+                    onChange={(e) => handleInputChange('username', e.target.value)}
                     />
-                  ) : (
-                    <span> {password.username} </span>
-                  )}
+                    ) : (
+                      <span> {password.username} </span>
+                      )}
                 </Col>
                 <Col>
                   <strong>Notes:</strong>
                   {editingPasswordId === password.id ? (
                     <Form.Control
-                      as="textarea"
-                      value={editedValues.notes || ''}
-                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                    as="textarea"
+                    value={editedValues.notes || ''}
+                    onChange={(e) => handleInputChange('notes', e.target.value)}
                     />
-                  ) : (
-                    <span> {password.notes} </span>
+                    ) : (
+                      <span> {password.notes} </span>
                   )}
                 </Col>
                 <Col>
                   <strong>Password:</strong>
                   {editingPasswordId === password.id ? (
                     <Form.Control
-                      type="password"
-                      value={editedValues.pw || ''}
-                      onChange={(e) => handleInputChange('pw', e.target.value)}
+                    type="password"
+                    value={editedValues.pw || ''}
+                    onChange={(e) => handleInputChange('pw', e.target.value)}
                     />
-                  ) : (
-                    password.revealed ? (
-                      <div>
+                    ) : (
+                      password.revealed ? (
+                        <div>
                         {password.pw}
                         <Button variant="secondary" className="ml-2" onClick={() => toggleReveal(index)}>Hide</Button>
                       </div>
@@ -167,18 +167,19 @@ const Dashboard = () => {
               </Row>
               {editingPasswordId === password.id ? (
                 <Button variant="success" className="mt-2" onClick={() => handleUpdate(index, editedValues)}>Save</Button>
-              ) : (
-                <Button variant="info" className="mt-2" onClick={() => handleEdit(password.id)}>Edit</Button>
-              )}
+                ) : (
+                  <Button variant="info" className="mt-2" onClick={() => handleEdit(password.id)}>Edit</Button>
+                  )}
               <Button variant="danger" className="ml-2 mt-2" onClick={() => handleDelete(password.id)}>Delete</Button>
             </Card.Body>
           </Card>
         ))
       ) : (
         <p>No passwords found for this user.</p>
-      )}
+        )}
       <Button variant="success" className="mt-4" onClick={handleClick}>Take me to add passwords</Button>
     </Container>
+        </>
   );
 };
 

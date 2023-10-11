@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useToken } from './Token';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const AddPasswordForm = () => { 
   const navigate = useNavigate()
@@ -48,6 +49,7 @@ const AddPasswordForm = () => {
   }
   return (
     <div>
+      <Navbar />
       <h2>Add Password</h2>
       <label>
         Notes:

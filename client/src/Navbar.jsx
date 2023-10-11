@@ -1,31 +1,38 @@
-import React from 'react'
-import Nav from 'react-bootstrap/Nav';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./Navbar.css"; 
 
 const Navbar = () => {
-
-
-
-
-
+  const nav = useNavigate();
+  const handleNav = (path) => {
+    nav(`/${path}`);
+  };
 
   return (
-    <Nav justify variant="tabs" defaultActiveKey="/home">
-    <Nav.Item>
-      <Nav.Link href="/home">Active</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link eventKey="link-2">Link</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link eventKey="disabled" disabled>
-        Disabled
-      </Nav.Link>
-    </Nav.Item>
-  </Nav>
-  )
-}
+    <nav className="navbar">
+      <button
+        className="nav-button"
+        value={"dashboard"}
+        onClick={(e) => handleNav(e.target.value)}
+      >
+        Dashboard
+      </button>
+      <button
+        className="nav-button"
+        value={"addpass"}
+        onClick={(e) => handleNav(e.target.value)}
+      >
+        Add Password
+      </button>
+      <button
+        className="nav-button"
+        value={"login"}
+        onClick={(e) => handleNav(e.target.value)}
+      >
+        Logout
+      </button>
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
