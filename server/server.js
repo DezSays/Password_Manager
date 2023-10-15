@@ -211,11 +211,12 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/logout", ensureToken, function (req, res) {
+  req.token = null; 
+  res.json('Logout Successful')
+});
 
 
-
-// // update passwords put route
-// // delete passwords delete route
 // // delete user? not required but would be nice
 
 
