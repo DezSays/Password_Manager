@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Navbar.css"; 
 import { useToken } from './Token';
 
 const Navbar = () => {
@@ -18,7 +17,7 @@ const Navbar = () => {
 
       if (response.ok) {
         nav(`/login`);
-        window.location.reload(); 
+        window.location.reload(); // Add this line to reload the page
       } else {
         console.error("Logout failed");
       }
@@ -36,23 +35,23 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="bg-gray-800 flex justify-around items-center p-4">
       <button
-        className="nav-button"
+        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
         value={"dashboard"}
         onClick={(e) => handleNav(e.target.value)}
       >
         Dashboard
       </button>
       <button
-        className="nav-button"
+        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
         value={"addpass"}
         onClick={(e) => handleNav(e.target.value)}
       >
         Add Password
       </button>
       <button
-        className="nav-button"
+        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
         value={"login"}
         onClick={(e) => handleNav(e.target.value)}
       >

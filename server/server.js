@@ -189,8 +189,9 @@ app.delete("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => 
 
 
 app.post("/signup", async (req, res) => {
-  const { id, email, pw, first_name, last_name, username, avatar_url } =
+  const { id, email, pw, first_name, last_name, username, avatar } =
     req.body;
+    console.log(id, email, pw, first_name, last_name, username, avatar)
   try {
     const existingUser = await db.oneOrNone(
       "SELECT * FROM users WHERE username = $1",
@@ -202,7 +203,7 @@ app.post("/signup", async (req, res) => {
     const hashed = await bcrypt.hash(pw, 10);
     await db.none(
       "INSERT INTO users(id, email, pw, first_name, last_name, username, avatar_url) VALUES($1, $2, $3, $4, $5, $6, $7)",
-      [id, email, hashed, first_name, last_name, username, avatar_url]
+      [id, email, hashed, first_name, last_name, username, avatar]
     );
     res.json({ message: "User created successfully" });
   } catch (error) {
