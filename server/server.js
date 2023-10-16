@@ -83,25 +83,25 @@ app.post("/api/login",  async (req, res) => {
 });
 
 
-// app.get("/users/:id", async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const userData = await db.oneOrNone(
-//       "SELECT id, username, email FROM users WHERE id = $1",
-//       id
-//     );
+app.get("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const userData = await db.oneOrNone(
+      "SELECT * FROM users WHERE id = $1",
+      id
+    );
 
-//     if (!userData) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-//     return res.json(userData);
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     return res.status(500).json({ message: "An error occurred while fetching user data" });
-//   }
+    return res.json(userData);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({ message: "An error occurred while fetching user data" });
+  }
 
-// });
+});
 
 app.get("/users/:id/passwords", ensureToken, async (req, res) => {
   const { id } = req.params;
