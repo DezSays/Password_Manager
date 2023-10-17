@@ -7,7 +7,7 @@ const Navbar = () => {
   const { token } = useToken();
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("https://lockbox-password-server.vercel.app/logout", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
