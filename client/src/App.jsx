@@ -4,6 +4,7 @@ import Register from "./Register";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
 import AddPasswordForm from "./AddPasswordForm";
+import Footer from "./Footer";
 import { TokenProvider } from "./Token";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="*" element={<Login />} />
         </Routes>
       </Router>
+      <Footer />
     </TokenProvider>
   );
 }
