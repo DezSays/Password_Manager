@@ -35,28 +35,35 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 flex justify-around items-center p-4">
-      <button
-        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
-        value={"dashboard"}
-        onClick={(e) => handleNav(e.target.value)}
-      >
-        Dashboard
-      </button>
-      <button
-        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
-        value={"addpass"}
-        onClick={(e) => handleNav(e.target.value)}
-      >
-        Add Password
-      </button>
-      <button
-        className="bg-gray-700 text-white border-none px-4 py-2 cursor-pointer text-lg transition duration-300"
-        value={"login"}
-        onClick={(e) => handleNav(e.target.value)}
-      >
-        Logout
-      </button>
+    <nav className="bg-gray-800 p-4">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center flex-shrink-0 text-white mr-6">
+          <span className="font-semibold text-xl tracking-tight">Your Project Name</span>
+        </div>
+        <div className="flex-grow text-right">
+          <button
+            className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+            value={"dashboard"}
+            onClick={(e) => handleNav(e.target.value)}
+          >
+            Dashboard
+          </button>
+          <button
+            className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+            value={"addpass"}
+            onClick={(e) => handleNav(e.target.value)}
+          >
+            Add Password
+          </button>
+          <button
+            className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+            value={"login"}
+            onClick={(e) => handleNav(e.target.value)}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };
