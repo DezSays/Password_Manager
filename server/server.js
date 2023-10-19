@@ -11,7 +11,7 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://lockbox-client.vercel.app",
   })
 );
 
