@@ -38,9 +38,7 @@ const Dashboard = () => {
   };
 
   const fetchUser = () => {
-
     fetch(`https://lockbox-password-server.vercel.app/users/${userID}`, {
-
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
