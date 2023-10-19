@@ -15,7 +15,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const fetchPasswords = () => {
-    fetch(`http://localhost:3000/users/${userID}/passwords`, {
+    fetch(`https://lockbox-password-server.vercel.app/users/${userID}/passwords`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,13 @@ const Dashboard = () => {
   };
 
   const fetchUser = () => {
+<<<<<<< HEAD
     fetch(`http://localhost:3000/users/${userID}`, {
+=======
+
+    fetch(`https://lockbox-password-server.vercel.app/users/${userID}`, {
+
+>>>>>>> d2f0e85237dc56d2959514732b80f4a8e0c2fdd7
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +80,7 @@ const Dashboard = () => {
   };
 
   const handleDelete = (passwordId) => {
-    fetch(`http://localhost:3000/users/${userID}/passwords/${passwordId}`, {
+    fetch(`https://lockbox-password-server.vercel.app/users/${userID}/passwords/${passwordId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +102,7 @@ const Dashboard = () => {
   };
 
   const handleUpdate = (index, updatedPassword) => {
-    fetch(`http://localhost:3000/users/${userID}/passwords/${updatedPassword.id}`, {
+    fetch(`https://lockbox-password-server.vercel.app/users/${userID}/passwords/${updatedPassword.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
