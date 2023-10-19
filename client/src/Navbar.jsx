@@ -17,7 +17,7 @@ const Navbar = () => {
 
       if (response.ok) {
         nav(`/login`);
-        window.location.reload(); // Add this line to reload the page
+        window.location.reload();
       } else {
         console.error("Logout failed");
       }
@@ -34,11 +34,15 @@ const Navbar = () => {
     }
   };
 
+  const handleNavHome = () => {
+    nav('/dashboard')
+  }
+
   return (
     <nav className="bg-gray-800 p-4">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <span className="font-semibold text-xl tracking-tight">Your Project Name</span>
+        <div onClick={handleNavHome} className="flex items-center flex-shrink-0 text-white mr-6">
+          <span className="font-semibold text-xl tracking-tight">Lockbox</span>
         </div>
         <div className="flex-grow text-right">
           <button
