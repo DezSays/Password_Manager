@@ -39,12 +39,16 @@ const Dashboard = () => {
 
   const fetchUser = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     fetch(`http://localhost:3000/users/${userID}`, {
 =======
 
     fetch(`https://lockbox-password-server.vercel.app/users/${userID}`, {
 
 >>>>>>> d2f0e85237dc56d2959514732b80f4a8e0c2fdd7
+=======
+    fetch(`https://lockbox-password-server.vercel.app/users/${userID}`, {
+>>>>>>> edeaff9368a71156d15bedb3e62dbf06b5f32df6
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

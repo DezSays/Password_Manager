@@ -53,8 +53,13 @@ const AddPasswordForm = () => {
       <Navbar />
       <div className="max-w-2xl mx-auto py-12 px-4">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Add a new password to your dashboard:</h2>
 =======
+=======
+        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Add a new password to your lockbox:</h2>
+
+>>>>>>> edeaff9368a71156d15bedb3e62dbf06b5f32df6
 
         <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Add a new password to your lockbox:</h2>
 
