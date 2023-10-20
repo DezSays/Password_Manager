@@ -63,133 +63,109 @@ const Register = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="container mx-auto my-8">
-        <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
-          <div className="flex items-center">
-            <div className="w-1/4 text-center">
+    <div className="flex flex-col items-center bg-gray-100 py-5">
+      <div className="w-full md:w-2/3 p-4 bg-white rounded shadow-md">
+        <h2 className="text-2xl mb-4 text-center text-navy">Why Register?</h2>
+        <p className="text-gray-700 text-center mb-4">
+          Our platform enables you to securely store and manage all your
+          passwords in one place. Say goodbye to forgotten passwords and the
+          hassle of insecure password storage. With our intuitive and secure
+          solution, you can access your passwords whenever you need them, from
+          any device. Your data remains encrypted and protected, ensuring your
+          information stays safe and easily accessible only to you.
+        </p>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <input
+            required
+            type="email"
+            placeholder="Email"
+            value={userData.email}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <input
+            required
+            type="password"
+            placeholder="Password"
+            value={userData.pw}
+            onChange={(e) => setUserData({ ...userData, pw: e.target.value })}
+            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <input
+            required
+            type="text"
+            placeholder="First Name"
+            value={userData.first_name}
+            onChange={(e) =>
+              setUserData({ ...userData, first_name: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <input
+            required
+            type="text"
+            placeholder="Last Name"
+            value={userData.last_name}
+            onChange={(e) =>
+              setUserData({ ...userData, last_name: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <input
+            required
+            type="text"
+            placeholder="Username"
+            value={userData.username}
+            onChange={(e) =>
+              setUserData({ ...userData, username: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <div className="flex flex-col mb-2 items-center">
+            <label
+              htmlFor="avatar"
+              className="text-sm font-semibold text-gray-700 mr-2"
+            >
+              Click on the image to choose your avatar:
+            </label>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="rounded-full w-16 h-16"
+            >
               <img
-                src={avatar}
-                alt={username}
-                className="rounded-full w-24 h-24 mx-auto mb-2"
+                src={userData.avatar}
+                className="rounded-full w-12 h-12"
+                alt="Selected Avatar"
               />
-              <h5 className="text-gray-800 text-lg font-semibold">{first_name} {last_name}</h5>
-            </div>
-            <div className="w-3/4 text-center">
-              <h1 className="text-3xl text-gray-800 font-semibold">
-                {username ? `${username}'s Dashboard` : 'Please Login' }
-              </h1>
-            </div>
+            </button>
           </div>
-        </div>
-  
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {passwords.length > 0 ? (
-            passwords.map((password, index) => (
-              <div key={password.id} className="mb-6 bg-gray-100 rounded-lg shadow-md p-6 relative">
-                <div>
-                  <span className="text-gray-800 text-sm">Site URL:</span>
-                  {editingPasswordId === password.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.site_url || ''}
-                      onChange={(e) => handleInputChange('site_url', e.target.value)}
-                      className="border rounded w-full p-2 mt-1 text-gray-800"
-                    />
-                  ) : (
-                    <span className="text-gray-800"> {password.site_url} </span>
-                  )}
-                </div>
-                <div>
-                  <span className="text-gray-800 text-sm">Username:</span>
-                  {editingPasswordId === password.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.username || ''}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
-                      className="border rounded w-full p-2 mt-1 text-gray-800"
-                    />
-                  ) : (
-                    <span className="text-gray-800"> {password.username} </span>
-                  )}
-                </div>
-                <div>
-                  <span className="text-gray-800 text-sm">Notes:</span>
-                  {editingPasswordId === password.id ? (
-                    <textarea
-                      value={editedValues.notes || ''}
-                      onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="border rounded w-full p-2 mt-1 text-gray-800"
-                    ></textarea>
-                  ) : (
-                    <span className="text-gray-800"> {password.notes} </span>
-                  )}
-                </div>
-                <div className="mt-4">
-                  {editingPasswordId === password.id ? (
-                    <input
-                      type="password"
-                      value={editedValues.pw || ''}
-                      onChange={(e) => handleInputChange('pw', e.target.value)}
-                      className="border rounded w-full p-2 mt-1 text-gray-800"
-                    />
-                  ) : (
-                    <div className="flex items-center">
-                      <span className="text-gray-800">
-                        {password.revealed ? password.pw : '********'}
-                      </span>
-                      {password.revealed ? (
-                        <button
-                          onClick={() => toggleReveal(index)}
-                          className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-1 px-2 rounded ml-2"
-                        >
-                          Hide
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => toggleReveal(index)}
-                          className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-1 px-2 rounded ml-2"
-                        >
-                          Reveal
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div className="absolute bottom-0 right-0 mb-2 mr-2 flex flex-col items-end">
-                  {editingPasswordId === password.id ? (
-                    <button
-                      onClick={() => handleUpdate(index, editedValues)}
-                      className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-2 px-4 rounded mb-2"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleEdit(password.id)}
-                      className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-2 px-4 rounded mb-2"
-                    >
-                      Edit
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDelete(password.id)}
-                    className="bg-gray-300 hover:bg-red-500 text-gray-800 font-bold py-2 px-4 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-800 mt-4">No passwords found for this user.</p>
-          )}
-        </div>
+          <button
+            className="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            type="submit"
+          >
+            Register
+          </button>
+        </form>
       </div>
-    </>
+      <p className="mt-2 mb-8">
+        Already have an account?{" "}
+        <a href="/login" className="text-blue-500">
+          Login
+        </a>
+      </p>
+
+      {isModalOpen && (
+        <Modal
+          setIsModalOpen={setIsModalOpen}
+          handleAvatarSelect={handleAvatarSelect}
+          avatars={avatars}
+        />
+      )}
+    </div>
   );
-  
 };
 
 export default Register;

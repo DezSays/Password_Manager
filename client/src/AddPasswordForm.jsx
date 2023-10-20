@@ -49,11 +49,11 @@ const AddPasswordForm = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen mb-4">
       <Navbar />
       <div className="max-w-2xl mx-auto py-12 px-4">
         <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Add a new password to your lockbox:</h2>
-
+  
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="notes">
@@ -121,6 +121,7 @@ const AddPasswordForm = () => {
       </div>
     </div>
   );
+  
 };
 
 export default AddPasswordForm;
