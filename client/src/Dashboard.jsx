@@ -126,7 +126,7 @@ const Dashboard = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-100">
-        <div className="container mx-auto my-8 mb-20 px-4">
+        <div className="container mx-auto mb-20 px-4">
           <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
             <div className="flex items-center">
               <div className="w-1/4 text-center">
