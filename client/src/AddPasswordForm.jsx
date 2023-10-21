@@ -1,62 +1,69 @@
-import React, { useState } from 'react';
-import { useToken } from './Token';
-import { v4 as uuidv4 } from 'uuid';
-import { useNavigate } from 'react-router-dom';
-import Navbar from './Navbar';
+import React, { useState } from "react";
+import { useToken } from "./Token";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const AddPasswordForm = () => {
   const navigate = useNavigate();
   const { token, userID } = useToken();
-  const [notes, setNotes] = useState('');
-  const [siteUrl, setSiteUrl] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [notes, setNotes] = useState("");
+  const [siteUrl, setSiteUrl] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleAddPassword = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://lockbox-password-server.vercel.app/users/${userID}/passwords`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          id: uuidv4(),
-          notes,
-          site_url: siteUrl,
-          pw: password,
-          username,
-        }),
-      });
+      const response = await fetch(
+        `https://lockbox-password-server.vercel.app/users/${userID}/passwords`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            id: uuidv4(),
+            notes,
+            site_url: siteUrl,
+            pw: password,
+            username,
+          }),
+        }
+      );
 
       if (response.ok) {
-        console.log('Password added successfully');
-        setNotes('');
-        setSiteUrl('');
-        setUsername('');
-        setPassword('');
+        setNotes("");
+        setSiteUrl("");
+        setUsername("");
+        setPassword("");
       } else {
-        console.error('Error adding password');
+        console.error("Error adding password");
       }
     } catch (error) {
-      console.error('Error adding password:', error);
+      console.error("Error adding password:", error);
     }
   };
 
   const handleReturn = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
     <div className="bg-gray-100 min-h-screen mb-4">
       <Navbar />
       <div className="max-w-2xl mx-auto py-12 px-4">
-        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">Add a new password to your lockbox:</h2>
-  
+        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">
+          Add a new password to your lockbox:
+        </h2>
+
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="notes">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="notes"
+            >
               Notes:
             </label>
             <input
@@ -68,7 +75,10 @@ const AddPasswordForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="siteUrl">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="siteUrl"
+            >
               Site URL:
             </label>
             <input
@@ -80,7 +90,10 @@ const AddPasswordForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="username"
+            >
               Username:
             </label>
             <input
@@ -92,7 +105,10 @@ const AddPasswordForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
               Password:
             </label>
             <input
@@ -121,7 +137,6 @@ const AddPasswordForm = () => {
       </div>
     </div>
   );
-  
 };
 
 export default AddPasswordForm;

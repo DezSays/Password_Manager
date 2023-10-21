@@ -1,19 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useToken } from './Token';
+import { useToken } from "./Token";
 
 const Navbar = () => {
   const nav = useNavigate();
   const { token } = useToken();
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://lockbox-password-server.vercel.app/logout", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://lockbox-password-server.vercel.app/logout",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         nav(`/login`);
@@ -35,13 +38,16 @@ const Navbar = () => {
   };
 
   const handleNavHome = () => {
-    nav('/dashboard')
-  }
+    nav("/dashboard");
+  };
 
   return (
     <nav className="bg-gray-800 p-4">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-        <div onClick={handleNavHome} className="flex items-center flex-shrink-0 text-white mr-6">
+        <div
+          onClick={handleNavHome}
+          className="flex items-center flex-shrink-0 text-white mr-6"
+        >
           <span className="font-semibold text-xl tracking-tight">Lockbox</span>
         </div>
         <div className="flex-grow text-right">

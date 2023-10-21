@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToken } from './Token';
+import { useToken } from "./Token";
 
 const Login = () => {
   const { setToken, setUserID } = useToken();
@@ -13,16 +13,19 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://lockbox-password-server.vercel.app/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, pw: pw }),
-      });
+      const response = await fetch(
+        "https://lockbox-password-server.vercel.app/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, pw: pw }),
+        }
+      );
       if (response.ok) {
-        const data = await response.json()
-        setUserID(data.userID)
+        const data = await response.json();
+        setUserID(data.userID);
         setToken(data.token);
         navigate("/dashboard");
       } else {
@@ -42,7 +45,10 @@ const Login = () => {
         {error && <div className="text-red-600 text-sm mb-4">{error}</div>}
         <form onSubmit={handleLogin} className="flex flex-col">
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="username"
+            >
               Username:
             </label>
             <input
@@ -54,7 +60,10 @@ const Login = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
               Password:
             </label>
             <input
@@ -77,7 +86,10 @@ const Login = () => {
         </p>
         <div className="text-center">
           <span className="text-gray-700 text-sm">Don't have an account?</span>
-          <a href="/register" className="text-blue-500 hover:text-blue-700 text-sm font-semibold ml-2">
+          <a
+            href="/register"
+            className="text-blue-500 hover:text-blue-700 text-sm font-semibold ml-2"
+          >
             Register here
           </a>
         </div>

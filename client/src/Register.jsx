@@ -38,7 +38,6 @@ const Register = () => {
     setUserData({ ...userData, avatar: avatar });
     setIsModalOpen(false);
   };
-  console.log(userData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +54,6 @@ const Register = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
       window.location.replace("/login");
     } catch (error) {
       console.error("Error:", error);

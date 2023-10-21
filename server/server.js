@@ -152,7 +152,6 @@ app.put("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
       );
       res.sendStatus(200);
     } else {
-      console.log("Password not found.");
       res.sendStatus(404);
     }
   } catch (error) {
@@ -179,21 +178,19 @@ app.delete(
           user_id,
           passwordId,
         ]);
-        res.sendStatus(204); // 204 indicates no content after successful deletion
+        res.sendStatus(204); 
       } else {
-        console.log("Password not found.");
-        res.sendStatus(404); // Sending a not found status code
+        res.sendStatus(404); 
       }
     } catch (error) {
       console.error("Error:", error);
-      res.sendStatus(500); // Sending an internal server error status code
+      res.sendStatus(500); 
     }
   }
 );
 
 app.post("/signup", async (req, res) => {
   const { id, email, pw, first_name, last_name, username, avatar } = req.body;
-  console.log(id, email, pw, first_name, last_name, username, avatar);
   try {
     const existingUser = await db.oneOrNone(
       "SELECT * FROM users WHERE username = $1",
@@ -220,5 +217,5 @@ app.get("/logout", ensureToken, function (req, res) {
 });
 
 app.listen(PORT, function () {
-  console.log(`app listening bruh. Port ${PORT} boi.`);
+  console.log(`App listening on PORT:${PORT}.`);
 });
