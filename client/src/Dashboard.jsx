@@ -149,7 +149,98 @@ const Dashboard = () => {
             {passwords.length > 0 ? (
               passwords.map((password, index) => (
                 <div key={password.id} className="mb-6 bg-gray-100 rounded-lg shadow-md p-6 relative">
-                  {/* Rest of the code remains unchanged */}
+                  <div>
+                    <span className="text-gray-800 text-sm">Site URL:</span>
+                    {editingPasswordId === password.id ? (
+                      <input
+                        type="text"
+                        value={editedValues.site_url || ''}
+                        onChange={(e) => handleInputChange('site_url', e.target.value)}
+                        className="border rounded w-full p-2 mt-1 text-gray-800"
+                      />
+                    ) : (
+                      <span className="text-gray-800"> {password.site_url} </span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-800 text-sm">Username:</span>
+                    {editingPasswordId === password.id ? (
+                      <input
+                        type="text"
+                        value={editedValues.username || ''}
+                        onChange={(e) => handleInputChange('username', e.target.value)}
+                        className="border rounded w-full p-2 mt-1 text-gray-800"
+                      />
+                    ) : (
+                      <span className="text-gray-800"> {password.username} </span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-800 text-sm">Notes:</span>
+                    {editingPasswordId === password.id ? (
+                      <textarea
+                        value={editedValues.notes || ''}
+                        onChange={(e) => handleInputChange('notes', e.target.value)}
+                        className="border rounded w-full p-2 mt-1 text-gray-800"
+                      ></textarea>
+                    ) : (
+                      <span className="text-gray-800"> {password.notes} </span>
+                    )}
+                  </div>
+                  <div className="mt-4">
+                    {editingPasswordId === password.id ? (
+                      <input
+                        type="password"
+                        value={editedValues.pw || ''}
+                        onChange={(e) => handleInputChange('pw', e.target.value)}
+                        className="border rounded w-full p-2 mt-1 text-gray-800"
+                      />
+                    ) : (
+                      <div className="flex items-center">
+                        <span className="text-gray-800">
+                          {password.revealed ? password.pw : '********'}
+                        </span>
+                        {password.revealed ? (
+                          <button
+                            onClick={() => toggleReveal(index)}
+                            className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-1 px-2 rounded ml-2"
+                          >
+                            Hide
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => toggleReveal(index)}
+                            className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-1 px-2 rounded ml-2"
+                          >
+                            Reveal
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute bottom-0 right-0 mb-2 mr-2 flex flex-col items-end">
+                    {editingPasswordId === password.id ? (
+                      <button
+                        onClick={() => handleUpdate(index, editedValues)}
+                        className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-2 px-4 rounded mb-2"
+                      >
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleEdit(password.id)}
+                        className="bg-gray-300 hover:bg-blue-500 text-gray-800 font-bold py-2 px-4 rounded mb-2"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(password.id)}
+                      className="bg-gray-300 hover:bg-red-500 text-gray-800 font-bold py-2 px-4 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
