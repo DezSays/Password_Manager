@@ -30,9 +30,7 @@ function ensureToken(req, res, next) {
 }
 
 app.get("/", function (req, res) {
-  res.json({
-    text: "Welcome to Lockbox Password Manager's Server.",
-  });
+  res.send("Welcome to Lockbox Password Manager's Server.");
 });
 
 app.get("/api/protected", ensureToken, function (req, res) {
@@ -52,7 +50,7 @@ app.get("/heartbeat", (req, res) => {
   res.send("Heartbeat Steady");
 });
 
-app.post("/api/login",  async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { username, pw } = req.body;
   try {
     const user = await db.oneOrNone(
@@ -68,20 +66,19 @@ app.post("/api/login",  async (req, res) => {
     }
     const user_id_auth = user.id;
     const userIDAuth = { id: user_id_auth };
-   
+
     const token = jwt.sign({ userIDAuth }, ACCESS_TOKEN_SECRET);
 
     res.json({
       token: token,
       message: "Sign in successful boi",
-      userID: user_id_auth
+      userID: user_id_auth,
     });
   } catch (error) {
     console.error("Error signing in:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 app.get("/users/:id", async (req, res) => {
   const { id } = req.params;
@@ -98,20 +95,23 @@ app.get("/users/:id", async (req, res) => {
     return res.json(userData);
   } catch (error) {
     console.error("Error fetching user:", error);
-    return res.status(500).json({ message: "An error occurred while fetching user data" });
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching user data" });
   }
-
 });
 
 app.get("/users/:id/passwords", ensureToken, async (req, res) => {
   const { id } = req.params;
   try {
-    const passwordData = await db.manyOrNone("SELECT * FROM passwords WHERE user_id = $1", id);
-    if(passwordData.length > 0){
+    const passwordData = await db.manyOrNone(
+      "SELECT * FROM passwords WHERE user_id = $1",
+      id
+    );
+    if (passwordData.length > 0) {
       res.json(passwordData);
-    }
-    else{
-      res.json({message: "No passwords found for this user."})
+    } else {
+      res.json({ message: "No passwords found for this user." });
     }
   } catch (error) {
     res.status(500).json({ message: `An error occurred: ${error.message}` });
@@ -120,7 +120,7 @@ app.get("/users/:id/passwords", ensureToken, async (req, res) => {
 
 app.post("/users/:id/passwords", ensureToken, async (req, res) => {
   const { notes, site_url, pw, username } = req.body;
-  const user_id = req.params.id
+  const user_id = req.params.id;
 
   try {
     await db.none(
@@ -137,7 +137,7 @@ app.post("/users/:id/passwords", ensureToken, async (req, res) => {
 app.put("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
   const { notes, site_url, pw, username } = req.body;
   const user_id = req.params.id;
-  const passwordId = req.params.passwordId; 
+  const passwordId = req.params.passwordId;
 
   try {
     const existingPassword = await db.oneOrNone(
@@ -150,48 +150,50 @@ app.put("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
         "UPDATE passwords SET notes = $1, site_url = $2, pw = $3, username = $4 WHERE user_id = $5 AND id = $6",
         [notes, site_url, pw, username, user_id, passwordId]
       );
-      res.sendStatus(200); 
+      res.sendStatus(200);
     } else {
-      console.log('Password not found.');
-      res.sendStatus(404); 
+      console.log("Password not found.");
+      res.sendStatus(404);
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.sendStatus(500); 
+    console.error("Error:", error);
+    res.sendStatus(500);
   }
 });
 
-app.delete("/users/:id/passwords/:passwordId", ensureToken, async (req, res) => {
-  const user_id = req.params.id;
-  const passwordId = req.params.passwordId;
+app.delete(
+  "/users/:id/passwords/:passwordId",
+  ensureToken,
+  async (req, res) => {
+    const user_id = req.params.id;
+    const passwordId = req.params.passwordId;
 
-  try {
-    const existingPassword = await db.oneOrNone(
-      "SELECT * FROM passwords WHERE user_id = $1 AND id = $2",
-      [user_id, passwordId]
-    );
-
-    if (existingPassword) {
-      await db.none(
-        "DELETE FROM passwords WHERE user_id = $1 AND id = $2",
+    try {
+      const existingPassword = await db.oneOrNone(
+        "SELECT * FROM passwords WHERE user_id = $1 AND id = $2",
         [user_id, passwordId]
       );
-      res.sendStatus(204); // 204 indicates no content after successful deletion
-    } else {
-      console.log('Password not found.');
-      res.sendStatus(404); // Sending a not found status code
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    res.sendStatus(500); // Sending an internal server error status code
-  }
-});
 
+      if (existingPassword) {
+        await db.none("DELETE FROM passwords WHERE user_id = $1 AND id = $2", [
+          user_id,
+          passwordId,
+        ]);
+        res.sendStatus(204); // 204 indicates no content after successful deletion
+      } else {
+        console.log("Password not found.");
+        res.sendStatus(404); // Sending a not found status code
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      res.sendStatus(500); // Sending an internal server error status code
+    }
+  }
+);
 
 app.post("/signup", async (req, res) => {
-  const { id, email, pw, first_name, last_name, username, avatar } =
-    req.body;
-    console.log(id, email, pw, first_name, last_name, username, avatar)
+  const { id, email, pw, first_name, last_name, username, avatar } = req.body;
+  console.log(id, email, pw, first_name, last_name, username, avatar);
   try {
     const existingUser = await db.oneOrNone(
       "SELECT * FROM users WHERE username = $1",
@@ -213,13 +215,9 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get("/logout", ensureToken, function (req, res) {
-  req.token = null; 
-  res.json('Logout Successful')
+  req.token = null;
+  res.json("Logout Successful");
 });
-
-
-// // delete user? not required but would be nice
-
 
 app.listen(PORT, function () {
   console.log(`app listening bruh. Port ${PORT} boi.`);
