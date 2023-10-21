@@ -29,9 +29,9 @@ function ensureToken(req, res, next) {
   }
 }
 
-app.get("/api", function (req, res) {
+app.get("/", function (req, res) {
   res.json({
-    text: "Howdy",
+    text: "Welcome to Lockbox Password Manager's Server.",
   });
 });
 
