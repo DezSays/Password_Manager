@@ -48,6 +48,7 @@ The server architecture includes various components such as routes, controllers,
 
 - React
 - React Router
+- Stripe
 - Tailwind
 - Bootstrap
 - React Icons
