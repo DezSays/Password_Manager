@@ -5,9 +5,14 @@ const pgp = require("pg-promise")();
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const db = pgp(process.env.DB);
 const PORT = 3000;
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const cn = {
+  connectionString: process.env.DB,
+  ssl: { rejectUnauthorized: false },
+};
+
+const db = pgp(cn);
 
 app.use(
   cors({
