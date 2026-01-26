@@ -7,14 +7,8 @@ const cors                = require("cors");
 const jwt                 = require("jsonwebtoken");
 const PORT                = 3000;
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const cn                  = {
-  connectionString: process.env.DB,
-  ssl: { 
-    rejectUnauthorized : false 
-  },
-};
-
-const db = pgp(cn);
+const cn                  = { connectionString: process.env.DB, ssl: { rejectUnauthorized: false } };
+const db                  = pgp(cn);
 
 app.use(
   cors({
