@@ -1,15 +1,17 @@
 require("dotenv").config();
-const express = require("express");
-const app = express();
-const pgp = require("pg-promise")();
-const bcrypt = require("bcrypt");
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
-const PORT = 3000;
+const express             = require("express");
+const app                 = express();
+const pgp                 = require("pg-promise")();
+const bcrypt              = require("bcrypt");
+const cors                = require("cors");
+const jwt                 = require("jsonwebtoken");
+const PORT                = 3000;
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
-const cn = {
+const cn                  = {
   connectionString: process.env.DB,
-  ssl: { rejectUnauthorized: false },
+  ssl: { 
+    rejectUnauthorized : false 
+  },
 };
 
 const db = pgp(cn);
